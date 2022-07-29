@@ -36,7 +36,9 @@ Ability to use event-based flag evaluation paradigms.
 - Not all provider can reasonably implement this... some SDKs don't support subscriptions, for example. Should these providers simply never fire events?
 - Implementation in providers will likely be more divergent than imperative evaluation.
 - Re-evaluating a flag after the handler fires sometimes means another round-trip, but most of the time things are locally cached - really dependant on SDK implementation. This is the prescription by some vendors though, so it's not unprecedented.
-- provider changes, stale handlers, shutdown
+- Some SDKs can't identify individual flags have changed, so all handlers must fire. In these cases, flags are usually cached locally, so this might not be such a big deal.
+- We may need a way to "shutdown" providers, cancelling all handlers.
+- We may need a way to "move" handlers from one provider to another if the provider is changed (recreate them in the new provider).
 
 ## Demo
 

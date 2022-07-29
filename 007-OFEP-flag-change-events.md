@@ -40,4 +40,5 @@ Ability to use event-based flag evaluation paradigms.
 
 ## Demo
 
-[Rudimentary Node SDK implementation]()
+[Rudimentary Node SDK implementation](https://github.com/open-feature/node-sdk/pull/123)
+[Rudimentary Provider implementation and usage in playground](https://github.com/open-feature/playground/pull/50)

@@ -11,7 +11,9 @@ Examples:
 
 ## Design
 
-The provider interface and the OpenFeature client would be extended to have new functionality to register handlers for a particular flag value. When a _application author_ registers a handler, the provider would react by appropriately registering a listener on it's SDK, polling it's REST API, etc. If the flag (or configuration in general) is updated, the provider would call the registered handler. The handler might be called with the flag key, or perhaps some other metadata pertaining to the configuration update. **Flag values would not be provided to the handler**, the handler would simply run, indicating the associated configuration had changed. The _application author_ would then perform a flag evaluation for the changed flag. This is consistent with the aforementioned flag systems, which do not evaluate the flags when they've changed. One reason is that no dynamic context can be reasonably provided in the case of events, since the event is driven by a change in the flag management system, not a user-action.
+The provider interface and the OpenFeature client would be extended to have new functionality to register handlers for a particular flag value or the configuration in general. When a _application author_ registers a handler, the provider would react by appropriately registering a listener on it's SDK, polling it's REST API, etc. If the flag (or configuration in general) is updated, the provider would call the registered handler. The handler might be called with the flag key, or perhaps some other metadata pertaining to the configuration update. **Flag values would not be provided to the handler**, the handler would simply run, indicating the associated configuration had changed. The _application author_ would then perform a flag evaluation for the changed flag. This is consistent with the aforementioned flag systems, which do not evaluate the flags when they've changed. One reason is that no dynamic context can be reasonably provided in the case of events, since the event is driven by a change in the flag management system, not a user-action.
+
+Per-flag design:
 
 ```ts
 const client = OpenFeature.getClient();
@@ -20,6 +22,23 @@ const client = OpenFeature.getClient();
 client.addHandler("hex-color", async (key) => {
   console.log(
     `Got update for ${key}, new value is ${await client.getStringValue(
+      key,
+      "000000"
+    )}`
+  );
+});
+```
+
+General configuration change design:
+
+```ts
+const client = OpenFeature.getClient();
+
+// subscribe to changes in the configuration in general, and evaluate flagd it when it's updated
+// this might be easier to implement across vendors, since many don't allow subscription to a particular flag, but general configuration changes
+client.on("configuration-change", async (changeMetadata) => {
+  console.log(
+    `Got update for configuration, new value for hex-color is ${await client.getStringValue(
       key,
       "000000"
     )}`

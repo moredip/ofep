@@ -11,7 +11,7 @@ Examples:
 
 ## Design
 
-The provider interface and the OpenFeature client would be extended to have new functionality to register handlers for a particular flag value. When a _application author_ registers a handler, the provider would react by appropriately registering a listener on it's SDK, polling it's REST API, etc. If the flag (or configuration in general) is updated, the provider would call the registered handler. The handler might be called with the flag key, or perhaps some other metadata pertaining to the configuration update. **Flag values would not be provided to the handler**, the handler would simply run, indicating the associated flag value hand changed. The _application author_ would then perform a flag evaluation for the changed flag. This is consistent with the aforementioned flag systems, which do not evaluate the flags when they've changed. One reason is that no dynamic context can be reasonably provided in the case of events, since the event is driven by a change in the flag management system, not a user-action.
+The provider interface and the OpenFeature client would be extended to have new functionality to register handlers for a particular flag value. When a _application author_ registers a handler, the provider would react by appropriately registering a listener on it's SDK, polling it's REST API, etc. If the flag (or configuration in general) is updated, the provider would call the registered handler. The handler might be called with the flag key, or perhaps some other metadata pertaining to the configuration update. **Flag values would not be provided to the handler**, the handler would simply run, indicating the associated configuration had changed. The _application author_ would then perform a flag evaluation for the changed flag. This is consistent with the aforementioned flag systems, which do not evaluate the flags when they've changed. One reason is that no dynamic context can be reasonably provided in the case of events, since the event is driven by a change in the flag management system, not a user-action.
 
 ```ts
 const client = OpenFeature.getClient();
@@ -33,7 +33,7 @@ Ability to use event-based flag evaluation paradigms.
 
 ## Caveats
 
-- Not all providers can reasonably implement this... some SDKs don't support subscriptions, for example. Should these providers simply never fire events?
+- Not all providers can reasonably implement this... some SDKs don't support subscriptions or configuration change notifications, for example. Should these providers simply never fire events?
 - Implementation in providers will likely be more divergent than imperative evaluation (based on demo work below).
 - Re-evaluating a flag after the handler fires sometimes means another round-trip, but most of the time in this case, things are locally cached - really dependant on SDK implementation. This is the pattern used by some vendors though, so it's not unprecedented.
 - Some SDKs can't identify individual flags have changed, so all registered handlers must fire (see cloudbees provider demo). This might not be such a big deal since they are likely no-ops.

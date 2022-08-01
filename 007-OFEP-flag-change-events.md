@@ -58,6 +58,7 @@ Ability to use event-based flag evaluation paradigms.
 - Some SDKs can't identify individual flags have changed, so all registered handlers must fire (see cloudbees provider demo). This might not be such a big deal since they are likely no-ops.
 - We may need a way to "shutdown" providers, cancelling all handlers.
 - We may need a way to "move" handlers from one provider to another if the provider is changed (recreate them in the new provider).
+- We should probably consider other events, like "SDK-READY" as well, which would fit well into design 2, above.
 
 ## Demo
 
